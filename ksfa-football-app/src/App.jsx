@@ -202,7 +202,8 @@ const LeaguePage = ({ onSelectTeam, useHardcodedData, appId, db }) => {
   }
 
   return (
-  <div className="w-full bg-gradient-to-b from-green-900 via-green-800 to-green-900 px-4 py-8">
+<div className="w-full min-h-screen overflow-y-auto bg-gradient-to-b from-green-900 via-green-800 to-green-900 px-4 py-8 flex flex-col">
+
     <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 text-center">
       KSFA League Rankings
     </h2>
