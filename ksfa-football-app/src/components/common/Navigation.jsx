@@ -2,6 +2,12 @@
 import React from 'react';
 import DropdownMenu from './DropdownMenu';
 
+const statePages = [
+  { id: 'karnataka', name: 'Karnataka League' },
+  { id: 'kerala', name: 'Kerala League' },
+  { id: 'delhi', name: 'Delhi League' }
+];
+
 const Navigation = ({ currentPage, setCurrentPage }) => {
   return (
     <header className="bg-black text-white p-4 shadow-md">

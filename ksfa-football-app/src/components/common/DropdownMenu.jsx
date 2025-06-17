@@ -7,7 +7,6 @@ const DropdownMenu = ({ setCurrentPage }) => {
   const states = [
     { id: 'karnataka', name: 'Karnataka' },
     { id: 'kerala', name: 'Kerala' },
-    { id: 'tamilnadu', name: 'Tamil Nadu' },
     { id: 'delhi', name: 'Delhi' }
   ];
 
