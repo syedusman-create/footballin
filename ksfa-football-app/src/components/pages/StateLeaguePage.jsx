@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 const StateLeaguePage = ({ stateName, divisionName, appId }) => {
+  const navigate = useNavigate();
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchTeams = async () => {
-      if (!stateName || !divisionName || !appId) {
-        console.error('Missing props:', { stateName, divisionName, appId });
+      if (!stateName || !divisionName) {
+        console.error('Missing props:', { stateName, divisionName });
         setError('Missing required parameters');
         setLoading(false);
         return;
@@ -17,128 +19,141 @@ const StateLeaguePage = ({ stateName, divisionName, appId }) => {
 
       try {
         const db = getFirestore();
-        // Modify the path to match your Firestore structure
-        const path = `Rankings/${stateName.toLowerCase()}/${divisionName}`;
-        console.log('Attempting to fetch from path:', path);
+        // Fix: Restructure path to have odd number of segments
+        const docPath = `artifacts/${appId}/public/data/${stateName.toLowerCase()}/${divisionName}/Rankings`;
         
-        const teamsRef = collection(db, ...path.split('/'));
-        
-        // Add more detailed logging
-        console.log('Collection reference:', {
-          path: teamsRef.path,
-          parent: teamsRef.parent?.path
+        console.log('Fetching teams from:', {
+          path: docPath,
+          state: stateName,
+          division: divisionName,
+          segments: docPath.split('/').length
         });
 
+        const teamsRef = collection(db, ...docPath.split('/'));
         const snapshot = await getDocs(teamsRef);
-        
-        console.log('Snapshot details:', {
-          empty: snapshot.empty,
-          size: snapshot.size,
-          exists: snapshot.docs.map(doc => ({
-            id: doc.id,
-            data: doc.data()
-          }))
-        });
 
         if (snapshot.empty) {
-          console.warn(`No teams found at path: ${teamsRef.path}`);
+          console.warn(`No teams found in collection: ${docPath}`);
           setTeams([]);
           return;
         }
 
         const teamsData = snapshot.docs.map(doc => {
           const data = doc.data();
-          // Match the exact field names from your Firestore document
           return {
             id: doc.id,
-            Team: data.Team || doc.id.replace(/_/g, ' '), // Use document ID as fallback
+            Team: data.Team || doc.id,
             Rank: parseInt(data.Rank) || 0,
             Played: parseInt(data['Matches Played']) || 0,
             Won: parseInt(data.Wins) || 0,
             Draw: parseInt(data.Draws) || 0,
             Lost: parseInt(data.Losses) || 0,
-            Points: parseInt(data.Points) || 0,
-            division: data.division || divisionName
+            Points: parseInt(data.Points) || 0
           };
         });
 
-        // Double check we have data
-        console.log('Processed teams data:', teamsData);
-
-        // Sort teams by points first, then by goal difference if you have it
-        const sortedTeams = teamsData.sort((a, b) => {
-          if (b.Points !== a.Points) {
-            return b.Points - a.Points;
-          }
-          return b.Won - a.Won; // Secondary sort by wins if points are equal
-        });
-
+        const sortedTeams = teamsData.sort((a, b) => b.Points - a.Points);
         setTeams(sortedTeams);
       } catch (err) {
         console.error('Fetch error:', {
           message: err.message,
           code: err.code,
-          path: path
+          state: stateName,
+          division: divisionName
         });
-        setError(err.message);
+        setError(`Failed to fetch teams: ${err.message}`);
       } finally {
         setLoading(false);
       }
     };
 
     fetchTeams();
-  }, [stateName, divisionName, appId]);
+  }, [stateName, divisionName]);
 
+  // Update back button handler to go back one step
+  const handleBack = () => {
+    navigate(-1); // This will go back to previous page
+  };
+
+  // Replace the simple loading and error states with better UI
   if (loading) {
-    return <div className="min-h-screen bg-black flex items-center justify-center">
-      <div className="text-white text-xl">Loading {divisionName} teams in {stateName}...</div>
-    </div>;
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-green-900 to-green-800 p-8 flex flex-col items-center justify-center">
+        <div className="w-16 h-16 border-4 border-green-400 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p className="text-green-100 text-xl font-semibold">Loading teams...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="min-h-screen bg-black flex items-center justify-center">
-      <div className="text-red-500 text-xl">Error: {error}</div>
-    </div>;
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-green-900 to-green-800 p-8 flex flex-col items-center justify-center">
+        <div className="bg-red-500/20 backdrop-blur-sm rounded-lg p-6 max-w-md w-full">
+          <p className="text-red-100 text-center mb-4">{error}</p>
+          <button
+            onClick={handleBack}
+            className="w-full py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-8">
-      <h1 className="text-4xl font-bold mb-8 text-center capitalize">
-        {stateName} - {divisionName.replace('_', ' ')} League Table
-      </h1>
-
-      {teams.length === 0 ? (
-        <div className="text-center text-xl text-gray-400">
-          No teams found for {divisionName} in {stateName}
-        </div>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full bg-gray-900 rounded-lg overflow-hidden">
-            <thead className="bg-green-600">
-              <tr>
-                <th className="px-6 py-3 text-left">Rank</th>
-                <th className="px-6 py-3 text-left">Team</th>
-                <th className="px-6 py-3 text-center">Played</th>
-                <th className="px-6 py-3 text-center">Won</th>
-                <th className="px-6 py-3 text-center">Draw</th>
-                <th className="px-6 py-3 text-center">Lost</th>
-                <th className="px-6 py-3 text-center">Points</th>
+    <div className="p-4 bg-gradient-to-b from-green-900 to-green-800 min-h-screen">
+      <button
+        onClick={handleBack}
+        className="mb-6 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg 
+                 transition-colors flex items-center gap-2 shadow-lg"
+      >
+        <span>←</span> Back
+      </button>
+      
+      <h2 className="text-3xl font-bold mb-6 text-white text-center">
+        {stateName} - {divisionName} League Table
+      </h2>
+      {teams.length > 0 ? (
+        <div className="overflow-x-auto rounded-lg shadow-xl">
+          <table className="min-w-full bg-white/10 backdrop-blur-sm">
+            <thead>
+              <tr className="border-b border-green-600/30">
+                <th className="px-6 py-4 text-left text-sm font-semibold text-green-300">Position</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-green-300">Team</th>
+                <th className="px-6 py-4 text-center text-sm font-semibold text-green-300">P</th>
+                <th className="px-6 py-4 text-center text-sm font-semibold text-green-300">W</th>
+                <th className="px-6 py-4 text-center text-sm font-semibold text-green-300">D</th>
+                <th className="px-6 py-4 text-center text-sm font-semibold text-green-300">L</th>
+                <th className="px-6 py-4 text-center text-sm font-semibold text-green-300">PTS</th>
               </tr>
             </thead>
-            <tbody>
-              {teams.map((team) => (
-                <tr key={team.id} className="border-b border-gray-800 hover:bg-gray-800">
-                  <td className="px-6 py-4">{team.Rank}</td>
-                  <td className="px-6 py-4">{team.Team}</td>
-                  <td className="px-6 py-4 text-center">{team.Played}</td>
-                  <td className="px-6 py-4 text-center">{team.Won}</td>
-                  <td className="px-6 py-4 text-center">{team.Draw}</td>
-                  <td className="px-6 py-4 text-center">{team.Lost}</td>
-                  <td className="px-6 py-4 text-center">{team.Points}</td>
+            <tbody className="divide-y divide-green-600/20">
+              {teams.map((team, index) => (
+                <tr 
+                  key={team.id}
+                  className={`
+                    ${index === 0 ? 'bg-green-500/10' : ''}
+                    ${index === 1 ? 'bg-green-500/5' : ''}
+                    ${index === 2 ? 'bg-green-500/5' : ''}
+                    hover:bg-green-600/20 transition-colors
+                  `}
+                >
+                  <td className="px-6 py-4 text-green-100 font-semibold">{index + 1}</td>
+                  <td className="px-6 py-4 text-green-100 font-medium">{team.Team}</td>
+                  <td className="px-6 py-4 text-center text-green-200">{team.Played}</td>
+                  <td className="px-6 py-4 text-center text-green-200">{team.Won}</td>
+                  <td className="px-6 py-4 text-center text-green-200">{team.Draw}</td>
+                  <td className="px-6 py-4 text-center text-green-200">{team.Lost}</td>
+                  <td className="px-6 py-4 text-center font-bold text-green-100">{team.Points}</td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+      ) : (
+        <div className="text-center text-green-100 bg-green-800/50 rounded-lg p-8 backdrop-blur-sm">
+          No teams found in this division
         </div>
       )}
     </div>

@@ -1,19 +1,19 @@
 // src/App.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from './utils/firebase';
 import { useFirebaseAuth } from './hooks/useFirebaseData';
 import { showMessageModal } from './utils/helpers';
 import { initialData } from './data/initialData';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 // Import components
-import Navigation from './Components/common/Navigation';
-import HomePage from './Components/pages/HomePage';
-import LeaguePage from './Components/pages/LeaguePage';
-import PlayerEditModal from './Components/models/PlayerEditModal';
-import FixturesPage from './Components/pages/FixturesPage';
-import StateLeaguePage from './Components/pages/StateLeaguePage';
-import DivisionSelect from './Components/pages/DivisionSelect';
+import Navigation from './components/common/Navigation';
+import HomePage from './components/pages/HomePage';
+import PlayerEditModal from './components/models/PlayerEditModal';
+import FixturesPage from './components/pages/FixturesPage';
+import StateLeaguePage from './components/pages/StateLeaguePage';
+import DivisionSelect from './components/pages/DivisionSelect';
 
 const App = () => {
   const { user, loading, error } = useFirebaseAuth();
@@ -22,12 +22,16 @@ const App = () => {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [currentPage, setCurrentPage] = useState('league'); // 'home' or 'league'
   const [players, setPlayers] = useState({});
+  const [selectedState, setSelectedState] = useState(null);
   const [selectedDivision, setSelectedDivision] = useState(null);
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const fetchPlayers = async (teamName) => {
     if (!useHardcodedData) {
       try {
-        const teamDocRef = doc(db, `artifacts/${appId}/public/data/teamPlayers`, teamName);
+        const teamDocRef = doc(db, `artifacts/${appId}/public/data/${stateName.toLowerCase()}/${divisionName}/Teams/${teamName}`, teamName);
         const teamDoc = await getDoc(teamDocRef);
         if (teamDoc.exists()) {
           setPlayers(teamDoc.data().players || []);
@@ -64,33 +68,18 @@ const App = () => {
     }
   };
 
-  const handleDivisionSelect = (divisionId) => {
-    setSelectedDivision(divisionId);
-    setCurrentPage('leagueStats');
+  // Update handleStateSelect
+  const handleStateSelect = (stateId) => {
+    setSelectedState(stateId);
+    setCurrentPage(stateId); // Update currentPage when state is selected
+    navigate(`/state/${stateId}`);
   };
 
-  const renderContent = () => {
-    switch (currentPage) {
-      case 'karnataka':
-      case 'kerala':
-      case 'delhi':
-        return (
-          <DivisionSelect 
-            stateName={currentPage}
-            onDivisionSelect={handleDivisionSelect}
-          />
-        );
-      case 'leagueStats':
-        return (
-          <StateLeaguePage 
-            stateName={currentPage}
-            divisionName={selectedDivision}
-            appId={appId}
-          />
-        );
-      default:
-        return <HomePage />;
-    }
+  // Update handleDivisionSelect
+  const handleDivisionSelect = (divisionId) => {
+    setSelectedDivision(divisionId);
+    // Navigate to leagues page with current state
+    navigate(`/leagues/${selectedState}/${divisionId}`);
   };
 
   if (loading) {
@@ -109,12 +98,44 @@ const App = () => {
         user={user}
         useHardcodedData={useHardcodedData}
         setUseHardcodedData={setUseHardcodedData}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
+        selectedState={selectedState}
+        selectedDivision={selectedDivision}
+        onStateSelect={handleStateSelect} // Pass the handler function
       />
 
-      <main>
-        {renderContent()}
+      <main className="container mx-auto px-4">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route 
+            path="/state/:stateName" 
+            element={
+              <DivisionSelect 
+                stateName={selectedState} 
+                onDivisionSelect={handleDivisionSelect}
+              />
+            } 
+          />
+          <Route 
+            path="/leagues/:stateName/:division" 
+            element={
+              <StateLeaguePage 
+                stateName={selectedState}
+                divisionName={selectedDivision}
+                appId={appId}
+              />
+            } 
+          />
+          <Route 
+            path="/fixtures/:stateName/:division" 
+            element={
+              <FixturesPage 
+                stateName={selectedState} 
+                divisionName={selectedDivision} 
+              />
+            } 
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
 
       {selectedTeam && (

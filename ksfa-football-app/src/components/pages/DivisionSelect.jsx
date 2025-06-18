@@ -1,12 +1,12 @@
 import React from 'react';
 
 const divisions = [
-  { id: 'under15', name: 'Under 15' },
-  { id: 'under17', name: 'Under 17' },
-  { id: 'under21', name: 'Under 21' },
-  { id: 'bDivision', name: 'B Division' },
-  { id: 'aDivision', name: 'A Division' },
-  { id: 'superLeague', name: 'Super League' }
+  { id: 'U15', name: 'Under 15' },
+  { id: 'U17', name: 'Under 17' },
+  { id: 'U21', name: 'Under 21' },
+  { id: 'B_Division', name: 'B Division' },
+  { id: 'A_Division', name: 'A Division' },
+  { id: 'Super_Division', name: 'Super Division' }
 ];
 
 const DivisionSelect = ({ stateName, onDivisionSelect }) => {
