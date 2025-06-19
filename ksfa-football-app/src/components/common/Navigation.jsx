@@ -94,16 +94,14 @@ const Navigation = ({
             )}
           </div>
           
-          {/* Fixtures Link */}
-          {selectedState && selectedDivision && (
-            <Link 
-              to={`/fixtures/${selectedState}/${selectedDivision}`}
-              className="px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 
-                text-black bg-white hover:bg-green-500"
-            >
-              Fixtures
-            </Link>
-          )}
+          {/* Fixtures Link - Always visible */}
+          <Link 
+            to="/fixtures"
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-black
+              ${location.pathname.includes('/fixtures') ? 'bg-green-500' : 'bg-white hover:bg-green-500'}`}
+          >
+            Fixtures
+          </Link>
         </div>
       </nav>
     </header>

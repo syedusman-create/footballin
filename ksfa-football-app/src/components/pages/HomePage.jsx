@@ -41,20 +41,12 @@ const HomePage = () => {
         <div className="absolute inset-0 bg-black/50">
           <div className="max-w-7xl mx-auto px-4 h-full flex flex-col justify-center">
             <div className="text-center">
-              <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold text-white mb-6 tracking-tight">
-                Karnataka State Football
+              <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-6 tracking-tight">
+                All India Football Federation
               </h1>
-              <p className="text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto">
-                Experience Karnataka's Premier Football League - Where Passion Meets Performance
+              <p className="text-base md:text-lg text-gray-200 mb-12 max-w-3xl mx-auto">
+                Experience India's Premier Football League - Where Passion Meets Performance
               </p>
-              <div className="flex justify-center gap-4">
-                <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105">
-                  View Teams
-                </button>
-                <button className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-green-900 transition-all duration-300 transform hover:scale-105">
-                  League Table
-                </button>
-              </div>
             </div>
           </div>
         </div>

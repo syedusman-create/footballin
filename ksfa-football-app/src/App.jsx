@@ -103,7 +103,7 @@ const App = () => {
         onStateSelect={handleStateSelect} // Pass the handler function
       />
 
-      <main className="container mx-auto px-4">
+      <main className="w-full min-h-screen bg-black text-white">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route 
@@ -126,13 +126,8 @@ const App = () => {
             } 
           />
           <Route 
-            path="/fixtures/:stateName/:division" 
-            element={
-              <FixturesPage 
-                stateName={selectedState} 
-                divisionName={selectedDivision} 
-              />
-            } 
+            path="/fixtures" 
+            element={<FixturesPage />} 
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
