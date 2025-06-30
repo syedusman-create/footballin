@@ -1,86 +1,62 @@
 // src/App.jsx
 import React, { useState, useEffect } from 'react';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { db } from './utils/firebase';
-import { useFirebaseAuth } from './hooks/useFirebaseData';
-import { showMessageModal } from './utils/helpers';
-import { initialData } from './data/initialData';
+import { doc, setDoc, getDoc } from 'firebase/firestore'; // Keep for other potential uses or remove if not needed elsewhere
+import { db } from './utils/firebase.js'; // Added .js extension
+import { useFirebaseAuth } from './hooks/useFirebaseData.js'; // Added .js extension
+import { showMessageModal } from './utils/helpers.js'; // Added .js extension
+import { initialData } from './data/initialData.js'; // Added .js extension
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useAdminCheck } from './hooks/useAdminCheck';
 
 // Import components
-import Navigation from './components/common/Navigation';
-import HomePage from './components/pages/HomePage';
-import PlayerEditModal from './components/models/PlayerEditModal';
-import FixturesPage from './components/pages/FixturesPage';
-import StateLeaguePage from './components/pages/StateLeaguePage';
-import DivisionSelect from './components/pages/DivisionSelect';
+import Navigation from './components/common/Navigation.jsx'; // Added .jsx extension
+import HomePage from './components/pages/Home/HomePage.jsx'; // Added .jsx extension
+// PlayerEditModal and related player states/functions are moved to PlayerPage
+import FixturesPage from './components/pages/Fixtures/FixturesPage.jsx'; // Added .jsx extension
+import StateLeaguePage from './components/pages/StateLeaguePage.jsx'; // Added .jsx extension
+import DivisionSelect from './components/pages/DivisionSelect.jsx'; // Added .jsx extension
+import PlayerPage from './components/pages/PlayerPage.jsx'; // Added .jsx extension // New PlayerPage component
+import SignInPage from './components/pages/SignInPage.jsx';
 
 const App = () => {
   const { user, loading, error } = useFirebaseAuth();
-  const [appId, setAppId] = useState('1:140722212660:web:4dbae5a944e96a5c135f61'); // Replace with your actual app ID
+  const isAdmin = useAdminCheck(user);
+  // Using the global __app_id variable if available, otherwise a default
+  const appId = '1:140722212660:web:4dbae5a944e96a5c135f61';
   const [useHardcodedData, setUseHardcodedData] = useState(false);
-  const [selectedTeam, setSelectedTeam] = useState(null);
-  const [currentPage, setCurrentPage] = useState('league'); // 'home' or 'league'
-  const [players, setPlayers] = useState({});
+  // Removed selectedTeam and players states
   const [selectedState, setSelectedState] = useState(null);
   const [selectedDivision, setSelectedDivision] = useState(null);
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  const fetchPlayers = async (teamName) => {
-    if (!useHardcodedData) {
-      try {
-        const teamDocRef = doc(db, `artifacts/${appId}/public/data/${stateName.toLowerCase()}/${divisionName}/Teams/${teamName}`, teamName);
-        const teamDoc = await getDoc(teamDocRef);
-        if (teamDoc.exists()) {
-          setPlayers(teamDoc.data().players || []);
-        }
-      } catch (e) {
-        console.error('Error fetching players:', e);
-        showMessageModal('Failed to fetch players: ' + e.message, 'error');
-      }
-    }
-  };
+  // Removed fetchPlayers, handleSelectTeam, handleClosePlayerEditModal, handleSavePlayers
+  // These will now reside in the PlayerPage component
 
-  const handleSelectTeam = (teamName) => {
-    setSelectedTeam(teamName);
-    fetchPlayers(teamName);
-  };
-
-  const handleClosePlayerEditModal = () => {
-    setSelectedTeam(null);
-  };
-
-  const handleSavePlayers = async (updatedPlayers) => {
-    if (useHardcodedData) {
-      showMessageModal('Cannot save changes when using sample data.', 'error');
-      return;
-    }
-    try {
-      const teamDocRef = doc(db, `artifacts/${appId}/public/data/teamPlayers`, selectedTeam);
-      await setDoc(teamDocRef, { players: updatedPlayers }, { merge: true });
-      showMessageModal('Players updated successfully!', 'info');
-      handleClosePlayerEditModal();
-    } catch (e) {
-      console.error('Error saving players:', e);
-      showMessageModal('Failed to save players: ' + e.message, 'error');
-    }
-  };
-
-  // Update handleStateSelect
   const handleStateSelect = (stateId) => {
     setSelectedState(stateId);
-    setCurrentPage(stateId); // Update currentPage when state is selected
     navigate(`/state/${stateId}`);
   };
 
-  // Update handleDivisionSelect
   const handleDivisionSelect = (divisionId) => {
     setSelectedDivision(divisionId);
-    // Navigate to leagues page with current state
     navigate(`/leagues/${selectedState}/${divisionId}`);
   };
+
+  // Effect to set initial selected state/division from URL if navigating directly
+  useEffect(() => {
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+    if (pathSegments[0] === 'state' && pathSegments[1]) {
+      setSelectedState(pathSegments[1]);
+    }
+    if (pathSegments[0] === 'leagues' && pathSegments[1] && pathSegments[2]) {
+      setSelectedState(pathSegments[1]);
+      setSelectedDivision(pathSegments[2]);
+    }
+    // No need to handle player route here as it will manage its own state
+  }, [location.pathname]);
+
 
   if (loading) {
     return <div className="flex justify-center items-center min-h-screen text-2xl text-gray-700">Loading application...</div>;
@@ -91,26 +67,27 @@ const App = () => {
   }
 
   return (
-    <div className="App">
+    <div className="App font-inter"> {/* Added font-inter class */}
       <div id="message-modal-container"></div> {/* Container for the modal */}
       
-      <Navigation 
+      <Navigation
         user={user}
+        isAdmin={isAdmin}
         useHardcodedData={useHardcodedData}
         setUseHardcodedData={setUseHardcodedData}
         selectedState={selectedState}
         selectedDivision={selectedDivision}
-        onStateSelect={handleStateSelect} // Pass the handler function
+        onStateSelect={handleStateSelect}
       />
 
-      <main className="w-full min-h-screen bg-black text-white">
+      <main className="w-full min-h-screen bg-black text-white p-4"> {/* Added padding */}
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage onStateSelect={handleStateSelect} />} />
           <Route 
             path="/state/:stateName" 
             element={
               <DivisionSelect 
-                stateName={selectedState} 
+                // stateName is now derived from URL params in DivisionSelect directly
                 onDivisionSelect={handleDivisionSelect}
               />
             } 
@@ -119,9 +96,19 @@ const App = () => {
             path="/leagues/:stateName/:division" 
             element={
               <StateLeaguePage 
-                stateName={selectedState}
-                divisionName={selectedDivision}
                 appId={appId}
+                useHardcodedData={useHardcodedData}
+                isAdmin={isAdmin}
+              />
+            } 
+          />
+          <Route 
+            path="/players/:stateName/:divisionName/:teamName" 
+            element={
+              <PlayerPage 
+                appId={appId} 
+                useHardcodedData={useHardcodedData} 
+                isAdmin={isAdmin}
               />
             } 
           />
@@ -129,19 +116,12 @@ const App = () => {
             path="/fixtures" 
             element={<FixturesPage />} 
           />
+          <Route path="/signin" element={<SignInPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
 
-      {selectedTeam && (
-        <PlayerEditModal
-          teamName={selectedTeam}
-          players={useHardcodedData ? (initialData.teamPlayers[selectedTeam] || []) : players}
-          onClose={handleClosePlayerEditModal}
-          onSave={handleSavePlayers}
-          useHardcodedData={useHardcodedData}
-        />
-      )}
+      {/* PlayerEditModal is now rendered within PlayerPage */}
     </div>
   );
 };

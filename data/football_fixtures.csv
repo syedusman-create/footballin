@@ -1,0 +1,37 @@
+id,state,division,date,time,homeTeam,awayTeam,venue,status,homeScore,awayScore
+566a1592-ab79-46e4-b564-5e8ed953dd32,Karnataka,A_Division,2024-07-01T16:00:00Z,16:00,Mysore Mavericks,South United,Kozhikode Turf,completed,2,0
+a0985278-d0a0-4bdc-a473-ec7877f0e262,Karnataka,A_Division,2024-07-28T16:00:00Z,16:00,Kerala Blasters B,Karnataka Kings,Sree Kanteerava Stadium,completed,4,2
+0f87dfd8-60c9-4b04-b7a6-a1cb2b24d0e1,Karnataka,B_Division,2024-07-26T16:00:00Z,16:00,Malabar United,Thrissur Titans,Mysore Ground,scheduled,,
+d17c051a-4ac0-4ccb-86c9-9536deb470c4,Karnataka,B_Division,2024-07-07T16:00:00Z,16:00,Delhi Stars,Mysore Mavericks,Bangalore Football Stadium,scheduled,,
+ab7622d9-a778-4ac3-85f9-a9798478badd,Karnataka,C_Division,2024-07-01T16:00:00Z,16:00,Kerala Falcons,Delhi Dynamos U21,Malappuram Sports Complex,completed,2,3
+7aea17bc-60c5-4895-9b28-9e635837245f,Karnataka,C_Division,2024-07-08T16:00:00Z,16:00,Capital Strikers,Thrissur Titans,Kozhikode Turf,scheduled,,
+a76921c4-f04a-4084-9c3d-80e7f06182c0,Karnataka,U15,2024-07-21T16:00:00Z,16:00,Kerala Falcons,Delhi Tigers,Delhi Football Arena,completed,4,1
+85a6af85-6bcc-4835-9c54-aa01c002baac,Karnataka,U15,2024-07-09T16:00:00Z,16:00,Delhi Dynamos U21,Malabar United,Kozhikode Turf,completed,2,0
+7b5edacd-b246-47d6-b5c4-e3867f9304f6,Karnataka,U17,2024-07-17T16:00:00Z,16:00,Kerala Falcons,Delhi Tigers,Mysore Ground,scheduled,,
+f815bce3-aa4f-422c-8751-89343863bf2f,Karnataka,U17,2024-07-01T16:00:00Z,16:00,Karnataka Kings,Kerala Falcons,Delhi Football Arena,scheduled,,
+b732f12e-5ee0-4fc2-863b-d1d0e7a01570,Karnataka,U21,2024-07-02T16:00:00Z,16:00,Bangalore FC Juniors,South United,Malappuram Sports Complex,scheduled,,
+df77b2eb-8e6b-48ba-9430-ea86258bee28,Karnataka,U21,2024-07-27T16:00:00Z,16:00,Delhi Stars,Capital Strikers,Malappuram Sports Complex,completed,0,5
+066e9ccf-8f3a-416f-b9e9-3d2648330c7d,Delhi,A_Division,2024-07-18T16:00:00Z,16:00,Malabar United,Delhi Stars,Sree Kanteerava Stadium,scheduled,,
+b58a0921-4e8a-4c86-a506-670f7423f2b4,Delhi,A_Division,2024-07-02T16:00:00Z,16:00,South United,Capital Strikers,Jawaharlal Nehru Stadium,scheduled,,
+6bae676e-6115-4f76-94d1-b9f63c36ec62,Delhi,B_Division,2024-07-02T16:00:00Z,16:00,Thrissur Titans,Delhi Stars,Delhi Football Arena,scheduled,,
+74edc6bc-c9d1-4ba6-a11e-f8cef8e83f0f,Delhi,B_Division,2024-07-27T16:00:00Z,16:00,South United,Kerala Blasters B,Malappuram Sports Complex,scheduled,,
+f359b952-fcfc-42fc-9b78-6a2230c4505e,Delhi,C_Division,2024-07-29T16:00:00Z,16:00,Mysore Mavericks,Delhi Tigers,Malappuram Sports Complex,completed,5,3
+d025f957-edc2-4c1b-ba41-2b10f18a3150,Delhi,C_Division,2024-07-04T16:00:00Z,16:00,Namma FC,Delhi Tigers,Mysore Ground,scheduled,,
+6d8fda13-1f8d-4a28-88c7-dbd9fd668081,Delhi,U15,2024-07-02T16:00:00Z,16:00,Kerala Blasters B,Capital Strikers,Jawaharlal Nehru Stadium,completed,5,1
+b7f71763-49f7-4cfc-baf2-7a4b2b7f7ffb,Delhi,U15,2024-07-17T16:00:00Z,16:00,Capital Strikers,Bangalore FC Juniors,Jawaharlal Nehru Stadium,completed,4,3
+8e57c39f-3636-41c7-b20b-2738e05f1d22,Delhi,U17,2024-07-26T16:00:00Z,16:00,Karnataka Kings,Delhi Dynamos U21,Bangalore Football Stadium,completed,3,0
+5a9b69b1-de91-44ba-b9fe-5f907bed11f3,Delhi,U17,2024-07-02T16:00:00Z,16:00,Malabar United,Delhi Dynamos U21,Mysore Ground,completed,3,1
+230136ae-a3b8-4622-b969-9d5beb287218,Delhi,U21,2024-07-18T16:00:00Z,16:00,Bangalore FC Juniors,Thrissur Titans,Bangalore Football Stadium,completed,5,1
+d48ac021-bbfe-4b09-8ec5-e324332648a8,Delhi,U21,2024-07-18T16:00:00Z,16:00,Karnataka Kings,Delhi Dynamos U21,Kozhikode Turf,scheduled,,
+32686f28-0d79-456a-8732-349e84a81225,Kerala,A_Division,2024-07-19T16:00:00Z,16:00,Kerala Blasters B,Delhi Stars,Malappuram Sports Complex,completed,4,0
+f31aa663-b429-407c-930c-d94f0a30b9b2,Kerala,A_Division,2024-07-23T16:00:00Z,16:00,Namma FC,Karnataka Kings,Jawaharlal Nehru Stadium,completed,5,4
+57fd5128-badb-4b04-ad70-8be76bcf9208,Kerala,B_Division,2024-07-14T16:00:00Z,16:00,Thrissur Titans,Kerala Falcons,Malappuram Sports Complex,completed,2,2
+a044089b-b3dd-4211-a340-0552d3b7aa70,Kerala,B_Division,2024-07-01T16:00:00Z,16:00,Mysore Mavericks,Malabar United,Mysore Ground,scheduled,,
+806a3699-5057-400d-841b-19f7dbc01125,Kerala,C_Division,2024-07-18T16:00:00Z,16:00,Capital Strikers,Delhi Tigers,Malappuram Sports Complex,scheduled,,
+216010c5-1377-4dec-b1bf-0cda63dff96b,Kerala,C_Division,2024-07-02T16:00:00Z,16:00,Karnataka Kings,Thrissur Titans,Malappuram Sports Complex,completed,0,2
+1f8eb746-a750-4ce2-b4b1-ae833bb0684f,Kerala,U15,2024-07-13T16:00:00Z,16:00,Delhi Stars,Namma FC,Delhi Football Arena,scheduled,,
+c3c85657-1d54-4180-b1b5-770b905ce811,Kerala,U15,2024-07-14T16:00:00Z,16:00,Kerala Blasters B,Bangalore FC Juniors,Mysore Ground,scheduled,,
+302f4751-88be-4538-b3ff-d8241bbdb798,Kerala,U17,2024-07-02T16:00:00Z,16:00,Delhi Tigers,South United,Sree Kanteerava Stadium,scheduled,,
+281f0510-97ac-4163-8928-50860ad34fb7,Kerala,U17,2024-07-09T16:00:00Z,16:00,Karnataka Warriors,Bangalore FC Juniors,Kozhikode Turf,scheduled,,
+580b90a3-b9b3-4e09-b7ca-6adb245be659,Kerala,U21,2024-07-17T16:00:00Z,16:00,Delhi Dynamos U21,Kerala Falcons,Mysore Ground,completed,5,3
+459785ed-ad2e-4ea6-b1a6-05e2c39718dd,Kerala,U21,2024-07-21T16:00:00Z,16:00,Bangalore FC Juniors,Delhi Dynamos U21,Mysore Ground,completed,1,5
